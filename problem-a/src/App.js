@@ -5,66 +5,64 @@ const EXAMPLE_SENATORS = [
   { id: 'M001111', name: 'Patty Murray', state: 'WA', party: 'Democrat', phone: '202-224-2621', twitter: 'PattyMurray' }
 ];
 
+const colNames = ['Name', 'State', 'Phone', 'Twitter'];
 /* Your code goes here */
 
-export function App (props) {
-  let senators = props.senators;
+export class App extends Component {
+
+  render() {
     return (
       <div className="container">
         <h1>US Senators (Oct 2020)</h1>
-        <SenatorTable senators={senators} />
+        <SenatorTable senators={this.props.senators} />
       </div>
 
     );
+  }
 }
 
-export function SenatorTable(props) {
-  let senators = props.senators;
+export class SenatorTable extends Component {
 
-    let colNames = ['Name', 'State', 'Phone', 'Twitter'];
-    let listSens = [];
-    senators.map((d) => { 
-      let senRow = <SenatorRow senators={d} key={d.id.toString()}></SenatorRow>
-      listSens.push(senRow);
-      return listSens;
+  render() {
+    let listSens = this.props.senators.map((d) => {
+      return <SenatorRow senator={d} key={d.id} />;
     });
     return (
       <table className="table table-b ordered">
-        <TableHeader columnNames={colNames} key={senators.name}></TableHeader>
+        <TableHeader columnNames={colNames}></TableHeader>
         <tbody>
-          {listSens};
+          {listSens}
         </tbody>
       </table>
     )
   }
-
-export function TableHeader(props) {
-  let columnNames = props.columnNames;
-
-  let thArray = [];
-  columnNames.map((d) => {
-    let th = <th>{d}</th>
-    thArray.push(th);
-    return thArray;
-  })
-  return (
-    <thead>
-      <tr>
-        {thArray};
-      </tr>
-    </thead>
-  );
 }
 
-export function SenatorRow(props){ 
-  let senators = props.senators;
+export class TableHeader extends Component {
 
-  return ( 
-    <tr>
-      <td>{senators.name}</td>
-      <td>{senators.state}</td>
-      <td>{senators.phone}</td>
-      <td>{senators.twitter}</td>
-    </tr>
-  )
+  render() {
+    let thArray = this.props.columnNames.map((d) => {
+      return <th key={d}>{d}</th>;
+    })
+    return (
+      <thead>
+        <tr>
+          {thArray}
+        </tr>
+      </thead>
+    );
+  }
+}
+
+export class SenatorRow extends Component {
+  render() {
+    return (
+      <tr>
+        <td>{this.props.senator.name}</td>
+        <td>{this.props.senator.party.charAt(0) + ' - ' + this.props.senator.state}</td>
+        <td><a href={'tel:' + this.props.senator.phone}>{this.props.senator.phone}</a></td>
+        <td><a href={'https://twitter.com/' + this.props.senator.twitter}>{'@' + this.props.senator.twitter}</a></td>
+      </tr>
+    );
+  }
 }
